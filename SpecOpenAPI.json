@@ -1,0 +1,127 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ML Forex API",
+    "description": "Esta es la descripción del esquema que deben seguir las API a vincular",
+    "contact": {
+      "email": "you@your-company.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/milam940/MlForex_spec/1.0.0",
+      "description": "API spec for ML APIs"
+    }
+  ],
+  "paths": {
+    "/trainModel": {
+      "post": {
+        "description": "Endpoint para lanzar el entrenamiento del modelo de ML, entra el archivo CSV en B64",
+        "requestBody": {
+          "description": "Entrenamiento de modelo de ML",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Procesado"
+          },
+          "415": {
+            "description": "La petición está vacía"
+          },
+          "500": {
+            "description": "Error interno"
+          }
+        }
+      }
+    },
+    "/predict": {
+      "post": {
+        "description": "Endpoint para lanzar la predicción del modelo de ML, entra el archivo CSV en B64",
+        "requestBody": {
+          "description": "Realizar predicción usando el modelo de ML",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Procesado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictResponse"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Se debe llamar al endpoint de entrenamiento primero"
+          },
+          "415": {
+            "description": "La petición está vacía"
+          },
+          "500": {
+            "description": "Error interno"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TrainingInfo": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Archivo CSV con la información de entrada",
+            "example": "Y2xvc2luZ19wcmljZSxkYXRlcwo0NTU3LjIwMDE5NTMxMjUsMjAyMi0wMS0wMwo0NTcxLjcwMDE5NTMxMjUsMjAyMi0wMS0wNAo0NTM5LjM5OTkwMjM0Mzc1LDIwMjItMDEtMDUKNDU2OC4zOTk5MDIzNDM3NSwyMDIyLTAxLTA2CjQ1MDQuMTAwMDk3NjU2MjUsMjAyMi0wMS0wNwo0NTEwLjc5OTgwNDY4NzUsMjAyMi0wMS0xMAo0NTM4LDIwMjItMDEtMTEKNDU0My4zOTk5MDIzNDM3NSwyMDIyLTAxLTEyCjQ0ODUuNSwyMDIyLTAxLTEz"
+          }
+        }
+      },
+      "PredictInfo": {
+        "required": [
+          "days_to_predict"
+        ],
+        "type": "object",
+        "properties": {
+          "days_to_predict": {
+            "type": "integer",
+            "example": 7
+          }
+        }
+      },
+      "PredictResponse": {
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Respuesta de procesamiento",
+            "example": "Processed"
+          }
+        }
+      }
+    }
+  }
+}
